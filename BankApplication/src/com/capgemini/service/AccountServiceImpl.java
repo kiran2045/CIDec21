@@ -2,6 +2,7 @@ package com.capgemini.service;
 
 import java.util.StringJoiner;
 
+import com.capgemini.exception.InsufficientBalanceException;
 import com.capgemini.exception.InsufficientInitailBalanceException;
 import com.capgemini.exception.InvalidAccountNumberException;
 import com.capgemini.model.Account;
@@ -40,9 +41,15 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public int withdrawAmount() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int withdrawAmount(int accountNumber, int amount)
+			throws InsufficientBalanceException, InvalidAccountNumberException {
+		Account account = accountRepository.searchAccount(accountNumber);
+		if(null==account)
+			throw new InvalidAccountNumberException();
+		if(amount > account.getAmount()){
+			throw new InsufficientBalanceException();
+		}
+		return  account.getAmount()-amount;
 	}
 
 	@Override

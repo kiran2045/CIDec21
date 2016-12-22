@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.capgemini.exception.InsufficientBalanceException;
 import com.capgemini.exception.InsufficientInitailBalanceException;
 import com.capgemini.exception.InvalidAccountNumberException;
 import com.capgemini.model.Account;
@@ -79,10 +80,34 @@ public class AccountTest {
 		assertEquals(5000, accountService.showBalance(account.getAccountNumber()));
 	}
 	
+	/*
+	 * withdraw amount
+	 * 1. when the account number is invalid then throw an invalid account number exception
+	 * 2. when the amount is more than current amount then system should throw invalid balance exception
+	 * 3. when the amount is correct than return the remaining amount
+	 * 
+	 */
+	@Test(expected = com.capgemini.exception.InvalidAccountNumberException.class)
+	public void whenTheAccountNumberIsInvalidForWithdrawSystemShouldThrowException()
+			throws InvalidAccountNumberException, InsufficientBalanceException {
+		when(accountRepository.searchAccount(account.getAccountNumber())).thenReturn(account);
+		accountService.withdrawAmount(122, 5000);
+		
+	}
+	@Test(expected = com.capgemini.exception.InsufficientBalanceException.class)
+	public void whenTheAmountisMoreSystemShouldThrowException()
+			throws InvalidAccountNumberException, InsufficientBalanceException {
+		when(accountRepository.searchAccount(account.getAccountNumber())).thenReturn(account);
+		accountService.withdrawAmount(account.getAccountNumber(), 6000);
+		
+	}
 	
-	
-	
-	
-	
+	@Test
+	public void whenTheAmountisCorrect()
+			throws InvalidAccountNumberException, InsufficientBalanceException {
+		when(accountRepository.searchAccount(account.getAccountNumber())).thenReturn(account);
+		assertEquals(2000, accountService.withdrawAmount(account.getAccountNumber(), 3000));
+
+	}
 	
 }
