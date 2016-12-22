@@ -110,4 +110,31 @@ public class AccountTest {
 
 	}
 	
+	/*
+	 * deposit amount
+	 * 1. when the account number is invalid then throw an invalid account number exception
+	 * 2. when the info is correct then return updated amount.
+	 */
+	
+	@Test(expected = com.capgemini.exception.InvalidAccountNumberException.class)
+	public void whenAccountNumberIsWrong() throws InvalidAccountNumberException{
+		
+			when(accountRepository.searchAccount(account.getAccountNumber())).thenReturn(account);
+			accountService.depositAmont(101, 2000);
+	}
+	@Test
+	public void whenAccountInfoIsCorrect() throws InvalidAccountNumberException{
+		
+		when(accountRepository.searchAccount(account.getAccountNumber())).thenReturn(account);
+		assertEquals(7000, account.getAmount());
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }

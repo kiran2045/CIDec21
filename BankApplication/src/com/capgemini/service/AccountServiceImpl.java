@@ -53,9 +53,14 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public int depositAmont() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int depositAmont(int accountNumber, int amount) throws InvalidAccountNumberException {
+		
+		Account account=accountRepository.searchAccount(accountNumber);
+		if(null==account)
+			throw new InvalidAccountNumberException();
+		else
+			account.setAmount(account.getAmount() + amount); 
+		return account.getAmount();
 	}
 
 	@Override
@@ -63,5 +68,7 @@ public class AccountServiceImpl implements AccountService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }
